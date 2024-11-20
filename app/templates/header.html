@@ -1,0 +1,49 @@
+{% load static %}
+    <!-- header section strats -->
+    <header class="header_section">
+        <div class="container-fluid">
+          <nav class="navbar navbar-expand-lg custom_nav-container">
+            <a class="navbar-brand" href="{% url 'home_page' %}">
+              <img src="{% static 'images/logo.png' %}" alt="" />
+            </a>
+            <div class="navbar-collapse" id="">
+              <ul class="navbar-nav justify-content-between ">
+                <div class="User_option">
+                  <li class="">
+                    <a class="mr-4" href="">
+                      Login
+                    </a>
+                    <a class="" href="">
+                      Sign up
+                    </a>
+                  </li>
+                </div>
+              </ul>
+  
+              <div class="custom_menu-btn">
+                <button onclick="openNav()">
+                  <span class="s-1">
+  
+                  </span>
+                  <span class="s-2">
+  
+                  </span>
+                  <span class="s-3">
+  
+                  </span>
+                </button>
+              </div>
+              <div id="myNav" class="overlay">
+                <div class="overlay-content">
+                  <a href="{% url 'home_page' %}">HOME</a>
+                  <a href="#">ABOUT</a>
+                  <a href="#">HOUSE</a>
+                  <a href="#">PRICING</a>
+                  <a href="#">CONTACT US</a>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+      <!-- end header section -->
