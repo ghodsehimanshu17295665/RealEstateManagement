@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <!-- External CSS directly linked -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Profile</h2>
+        <div class="card">
+            <div class="card-body">
+                {% if data %}
+                    <h5 class="card-title">{{ data.user.username }}</h5>
+                    <p><strong>Email:</strong> {{ data.user.email }}</p>
+                    <p><strong>Birth Date:</strong> {{ data.birth_date }}</p>
+                    <p><strong>Gender:</strong> {{ data.get_gender_display }}</p>
+                    <p><strong>Profile Picture:</strong></p>
+                    {% if data.profile_picture %}
+                        <img src="{{ data.profile_picture.url }}" alt="Profile Picture" width="150">
+                    {% else %}
+                        <p>No profile picture available.</p>
+                    {% endif %}
+                {% else %}
+                    <p>No profile data found.</p>
+                {% endif %}
+                <br><br>
+                <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript directly linked -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

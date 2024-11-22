@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Update Your Profile</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Display validation errors -->
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                {{ form.username }}
+            </div>
+
+            <!-- First Name -->
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                {{ form.first_name }}
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                {{ form.last_name }}
+            </div>
+
+            <!-- Email (readonly, if necessary) -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                {{ form.email }}
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                {{ form.phone_number }}
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label for="address">Address</label>
+                {{ form.address }}
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                {{ form.gender }}
+            </div>
+
+            <!-- Birth Date -->
+            <div class="form-group">
+                <label for="birth_date">Birth Date</label>
+                {{ form.birth_date }}
+            </div>
+
+            <!-- Profile Picture -->
+            <div class="form-group">
+                <label for="profile_picture">Profile Picture</label><br>
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" alt="Current Profile Picture" width="150" class="mb-3"><br>
+                {% endif %}
+                {{ form.profile_picture }}
+            </div>
+
+            <!-- Save Button -->
+            <button type="submit" class="btn btn-success btn-block">Save Changes</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

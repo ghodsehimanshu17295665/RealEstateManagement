@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom Styles for Seller Dashboard */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #3498db; /* Updated background color to blue */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .heading_container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .heading_container h2 {
+            font-size: 36px;
+            color: #fff; /* Updated text color for better visibility on blue background */
+        }
+
+        .seller_dashboard {
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        .detail-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .detail-box h5 {
+            font-size: 24px;
+            color: #16a085;
+        }
+
+        .detail-box p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .detail-box a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #16a085;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .detail-box a:hover {
+            background-color: #1abc9c;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="heading_container">
+            <h2>Seller Dashboard</h2>
+            <p>Manage your products, offers, and transactions in one place.</p>
+        </div>
+
+        <!-- Dashboard Content -->
+        <section class="seller_dashboard">
+            <div class="row">
+                <!-- My Listings Section -->
+                <div class="col-md-4">
+                    <div class="detail-box">
+                        <h5>My Listings</h5>
+                        <p>View and manage your listed properties</p>
+                        <a href="">View Listings</a>
+                    </div>
+                </div>
+
+                <!-- Pending Offers Section -->
+                <div class="col-md-4">
+                    <div class="detail-box">
+                        <h5>Pending Offers</h5>
+                        <p>Check offers on your listings</p>
+                        <a href="">View Offers</a>
+                    </div>
+                </div>
+
+                <!-- Transaction History Section -->
+                <div class="col-md-4">
+                    <div class="detail-box">
+                        <h5>Transaction History</h5>
+                        <p>View your completed sales</p>
+                        <a href="">View History</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS (Optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
