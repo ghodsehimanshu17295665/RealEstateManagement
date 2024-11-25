@@ -5,35 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Profile</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #007bff;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .btn-container .btn-custom,
+        .btn-container .btn-yellow {
+            width: 48%;
+        }
+        .back-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #007bff;
+        }
+        label, input, select, textarea {
+            color: black !important;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4 text-center">Update Your Profile</h2>
-        <form method="post" enctype="multipart/form-data">
+
+    <div class="container">
+        <h2 class="text-center mb-4">Update Your Profile</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             
-            <!-- Display validation errors -->
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    <ul>
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <li>{{ field.label }}: {{ error }}</li>
-                            {% endfor %}
-                        {% endfor %}
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-            
-            <!-- Username -->
-            <div class="form-group">
-                <label for="username">Username</label>
-                {{ form.username }}
-            </div>
-
             <!-- First Name -->
             <div class="form-group">
                 <label for="first_name">First Name</label>
@@ -46,28 +72,10 @@
                 {{ form.last_name }}
             </div>
 
-            <!-- Email (readonly, if necessary) -->
+            <!-- Email -->
             <div class="form-group">
                 <label for="email">Email</label>
                 {{ form.email }}
-            </div>
-
-            <!-- Phone Number -->
-            <div class="form-group">
-                <label for="phone_number">Phone Number</label>
-                {{ form.phone_number }}
-            </div>
-
-            <!-- Address -->
-            <div class="form-group">
-                <label for="address">Address</label>
-                {{ form.address }}
-            </div>
-
-            <!-- Gender -->
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                {{ form.gender }}
             </div>
 
             <!-- Birth Date -->
@@ -76,22 +84,43 @@
                 {{ form.birth_date }}
             </div>
 
+            <!-- Gender -->
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                {{ form.gender }}
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                {{ form.phone_number }}
+            </div>
+
             <!-- Profile Picture -->
             <div class="form-group">
-                <label for="profile_picture">Profile Picture</label><br>
-                {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="Current Profile Picture" width="150" class="mb-3"><br>
-                {% endif %}
+                <label for="profile_picture">Profile Picture</label>
                 {{ form.profile_picture }}
             </div>
 
-            <!-- Save Button -->
-            <button type="submit" class="btn btn-success btn-block">Save Changes</button>
+            <!-- Address -->
+            <div class="form-group">
+                <label for="address">Address</label>
+                {{ form.address }}
+            </div>
+
+            <!-- Buttons -->
+            <div class="btn-container">
+                <button type="submit" class="btn-success">Update Profile</button>
+                <a href="{% url 'profile' %}" class="btn-custom">Back to Profile</a>
+            </div>
+
         </form>
     </div>
 
+    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
