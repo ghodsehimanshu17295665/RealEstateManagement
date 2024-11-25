@@ -8,7 +8,8 @@ from .forms import (
     SignUpForm,
     CustomUserCreationForm,
     CustomUserChangeForm,
-    ProfileUpdateForm
+    ProfileUpdateForm,
+    PropertyForm
 )
 from .models import User, Profile, Category, Property
 from django.contrib.auth import login, authenticate, logout
@@ -122,65 +123,27 @@ class ProfileView(View):
         return render(request, "registration/profile.html", context)
 
 
-# class UpdateProfileView(View):
-#     def get(self, request):
-#         # Get the profile for the logged-in user
-#         profile = Profile.objects.filter(user=request.user).first()
-
-#         # Populate the form with the existing profile data
-#         form = ProfileForm(instance=profile)
-#         return render(request, 'registration/update_profile.html', {'form': form})
-
-#     def post(self, request):
-#         # Get the profile for the logged-in user
-#         profile = Profile.objects.get(user=request.user)
-
-#         # Populate the form with updated data
-#         form = ProfileForm(request.POST, request.FILES, instance=profile)
-
-#         if form.is_valid():
-#             form.save()  # Save the updated profile
-#             return redirect('profile')  # Redirect back to the profile page
-
-#         return render(request, 'registration/update_profile.html', {'form': form})
-
-
+# Update User Profile Views:-
 class UpdateProfileView(View):
     def get(self, request):
         profile = request.user.profile
-        form = ProfileUpdateForm(instance=profile)
+        form = ProfileUpdateForm(instance=profile, user=request.user)
         return render(request, "registration/update_profile.html", {"form": form})
 
     def post(self, request):
         profile = request.user.profile
-        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect("profile_page")  # Redirect to the profile page after update
+            return redirect("profile")
         return render(request, "registration/update_profile.html", {"form": form})
 
-# class UpdateProfileView(LoginRequiredMixin, TemplateView):
-#     template_name = "registration/updateprofile.html"
-#     login_url = "/login/"  # Redirect URL for unauthorized users
 
-#     def get(self, request):
-#         profile = Profile.objects.filter(user=request.user).first()
-#         form = ProfileUpdateForm(
-#             instance=profile, initial={"first_name": request.user.first_name}
-#         )
-#         return render(request, self.template_name, {"form": form})
+# Listing views :-
+class Listing_View(LoginRequiredMixin, ListView):
+    model = Property
+    template_name = 'seller/view_listing.html'
+    context_object_name = 'properties'
 
-#     def post(self, request):
-#         profile, created = Profile.objects.get_or_create(user=request.user)
-#         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
-
-#         if form.is_valid():
-#             form.save()
-#             messages.success(
-#                 request, "Your profile has been updated successfully!"
-#             )
-#             return redirect("profile_page")
-#         else:
-#             messages.error(request, "Please correct the errors below.")
-
-#         return render(request, self.template_name, {"form": form})
+    def get_queryset(self):
+        return Property.objects.filter(seller=self.request.user)
