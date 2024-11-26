@@ -1,0 +1,24 @@
+{% extends "seller/seller_base.html" %}
+
+{% block title %}Delete Property{% endblock %}
+
+{% block content %}
+<article class="card mx-auto" style="max-width: 600px; margin-top: 20px;">
+    <header class="card-header bg-danger text-white text-center">
+        <h5>Confirm Deletion</h5>
+    </header>
+    <div class="card-body text-center">
+        <p>Are you sure you want to delete the property <strong>{{ property.title }}</strong>?</p>
+        <p><strong>Price:</strong> ${{ property.price }}</p>
+        <p><strong>Location:</strong> {{ property.location }}</p>
+        {% if property.image %}
+            <img src="{{ property.image.url }}" alt="{{ property.title }}" class="property-image mb-3">
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'property_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</article>
+{% endblock %}

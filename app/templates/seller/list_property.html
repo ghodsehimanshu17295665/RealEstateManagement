@@ -1,0 +1,34 @@
+{% extends "seller/seller_base.html" %}
+
+{% block title %}My Properties{% endblock %}
+
+{% block content %}
+<article class="card">
+    <header class="card-header">
+        My Properties
+    </header>
+    <div class="card-body">
+        {% if properties %}
+            <ul class="list-group">
+                {% for property in properties %}
+                    <li class="list-group-item">
+                        <h5>{{ property.title }}</h5>
+                        <p><strong>Price:</strong> ${{ property.price }}</p>
+                        <p><strong>Location:</strong> {{ property.location }}</p>
+                        <p><strong>Status:</strong> {{ property.get_status_display }}</p>
+                        <p>{{ property.description }}</p>
+                        {% if property.image %}
+                            <img src="{{ property.image.url }}" alt="{{ property.title }}" class="property-image">
+                        {% endif %}
+                        <br>
+                        <a href="{% url 'update_property' property.pk %}" class="btn btn-primary mt-2">Edit Property</a>
+                        <a href="{% url 'delete_property' property.pk %}" class="btn btn-danger mt-2">Remove Property</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No properties found.</p>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}
