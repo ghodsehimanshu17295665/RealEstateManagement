@@ -5,13 +5,11 @@ from .views import (
     Home,
     SignUpView,
     LoginView,
-    HouseView,
     LogoutView,
     BuyerDashboardView,
     SellerDashboardView,
     ProfileView,
     UpdateProfileView,
-    Listing_View,
     PropertyList_View,
     CreatePropertyView,
     UpdatePropertyView,
@@ -23,7 +21,6 @@ urlpatterns = [
     path("", Home.as_view(), name="home_page"),
     path("signup/", SignUpView.as_view(), name="signup_page"),
     path("login/", LoginView.as_view(), name="login_page"),
-    path("house/", HouseView.as_view(), name="house_page"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path(
         "buyer-dashboard/",
@@ -39,7 +36,6 @@ urlpatterns = [
     path(
         "profile/update/", UpdateProfileView.as_view(), name="update_profile"
     ),
-    path("property/list/", Listing_View.as_view(), name="listing_view"),
     path("list/property/", PropertyList_View.as_view(), name="property_list"),
     path(
         "create/property/",
