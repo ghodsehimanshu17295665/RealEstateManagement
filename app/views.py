@@ -17,8 +17,10 @@ from .forms import (
 from .models import User, Profile, Category, Property
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.paginator import Paginator
 
 
+# Home Page -
 class Home(TemplateView):
     template_name = "index.html"
 
@@ -26,6 +28,7 @@ class Home(TemplateView):
         return render(request, self.template_name)
 
 
+# Signup view :-
 class SignUpView(View):
     template_name = "registration/signup.html"
 
@@ -37,37 +40,10 @@ class SignUpView(View):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Authenticate the user
-            user = authenticate(
-                request,
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password1"],
-            )
-            if user:
-                # Create a profile for the user
-                Profile.objects.create(
-                    user=user,
-                    birth_date=None,
-                    gender=None,
-                )
-                # Log the user in
-                login(request, user)
-
-                messages.success(
-                    request,
-                    "Account created successfully! You are now logged in.",
-                )
-                return redirect(reverse_lazy("login_page"))
-            else:
-                messages.error(
-                    request, "Authentication failed. Please try again."
-                )
+            messages.success(request, "Account created successfully! Please log in.")
+            return redirect(reverse_lazy("login_page"))
         else:
-            messages.error(
-                request,
-                "There was an error with your submission. Please try again.",
-            )
-
+            messages.error(request, "There was an error with your submission. Please try again.")
         return render(request, self.template_name, {"form": form})
 
 
@@ -85,14 +61,15 @@ class LoginView(View):
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
-            if user is not None:
+            if user:
                 login(request, user)
-                return redirect("home_page")
+                # Redirect based on role
+                if user.role == "SELLER":
+                    return redirect("home_page")
+                else:
+                    return redirect("home_page")
+        messages.error(request, "Invalid username or password. Please try again.")
         return render(request, "registration/login.html", {"form": form})
-
-
-class HouseView(TemplateView):
-    template_name = "registration/login.html"
 
 
 # Logout
@@ -118,10 +95,10 @@ class SellerDashboardView(LoginRequiredMixin, View):
     """Seller Dashboard View"""
 
     def get(self, request):
-        return render(request, "seller/seller_dashboard.html")
+        return render(request, "seller/view_listing.html")
 
 
-# Profile myProfile :-
+# Seller Profile :-
 class ProfileView(View):
     def get(self, request):
         if not request.user.is_authenticated:
@@ -129,16 +106,16 @@ class ProfileView(View):
 
         data = Profile.objects.filter(user=request.user).first()
         context = {"data": data}
-        return render(request, "registration/profile.html", context)
+        return render(request, "seller/seller_profile.html", context)
 
 
-# Update User Profile Views:-
+# Update seller Profile Views:-
 class UpdateProfileView(View):
     def get(self, request):
         profile = request.user.profile
         form = ProfileUpdateForm(instance=profile, user=request.user)
         return render(
-            request, "registration/update_profile.html", {"form": form}
+            request, "seller/seller_profile_update.html", {"form": form}
         )
 
     def post(self, request):
@@ -150,18 +127,8 @@ class UpdateProfileView(View):
             form.save()
             return redirect("profile")
         return render(
-            request, "registration/update_profile.html", {"form": form}
+            request, "seller/seller_profile_update.html", {"form": form}
         )
-
-
-# Listing views :-
-class Listing_View(LoginRequiredMixin, ListView):
-    model = Property
-    template_name = "seller/view_listing.html"
-    context_object_name = "properties"
-
-    def get_queryset(self):
-        return Property.objects.filter(seller=self.request.user)
 
 
 # Create Property Views :-
@@ -199,7 +166,14 @@ class PropertyList_View(TemplateView):
 
     def get(self, request):
         properties = Property.objects.filter(seller=request.user)
-        return render(request, self.template_name, {"properties": properties})
+
+        # Set up pagination (2 items per page)
+        paginator = Paginator(properties, 2)  # Show 2 properties per page
+        page_number = request.GET.get('page', 1)  # Get the page number from query parameters
+        page_obj = paginator.get_page(page_number)  # Get the specific page
+
+        # Pass the page_obj to the template
+        return render(request, self.template_name, {"page_obj": page_obj})
 
 
 # Update Property Views :-
@@ -251,6 +225,7 @@ class UpdatePropertyView(View):
         )
 
 
+# Remove Property Views :-
 class DeletePropertyView(View):
     template_name = "seller/delete_property.html"
 
