@@ -83,6 +83,7 @@ class CustomUserAdmin(DefaultUserAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "birth_date", "gender")
+    search_fields = ('user__username', 'user__email')
 
 
 @admin.register(Category)
