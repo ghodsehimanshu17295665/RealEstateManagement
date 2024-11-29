@@ -1,0 +1,97 @@
+{% extends "buyer/buyer_base.html" %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4">Update Your Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- First Name -->
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            {{ form.first_name }}
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            {{ form.last_name }}
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            {{ form.email }}
+        </div>
+
+        <!-- Birth Date -->
+        <div class="form-group">
+            <label for="birth_date">Birth Date</label>
+            {{ form.birth_date }}
+        </div>
+
+        <!-- Gender -->
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            {{ form.gender }}
+        </div>
+
+        <!-- Phone Number -->
+        <div class="form-group">
+            <label for="phone_number">Phone Number</label>
+            {{ form.phone_number }}
+        </div>
+
+        <!-- Profile Picture -->
+        <div class="form-group">
+            <label for="profile_picture">Profile Picture</label>
+            {{ form.profile_picture }}
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+            <label for="address">Address</label>
+            {{ form.address }}
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-container">
+            <button type="submit" class="btn btn-success">Profile Update</button>
+            <a href="{% url 'buyer_profile' %}" class="btn btn-secondary">Back to Profile</a>
+        </div>
+    </form>
+</div>
+
+<!-- Page-specific styles -->
+<style>
+    .container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 600px;
+        margin-top: 50px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+        color: #007bff;
+    }
+
+    label, input, select, textarea {
+        color: black !important;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn-container .btn {
+        width: 48%;
+    }
+</style>
+{% endblock %}

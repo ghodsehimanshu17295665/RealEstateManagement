@@ -66,3 +66,36 @@
     </div>
   </div>
 </section>
+
+
+
+{% comment %} {% load static %}
+<section class="sale_section layout_padding-bottom">
+  <div class="container-fluid">
+    <div class="heading_container">
+      <h2>Houses For Sale</h2>
+      <p>Explore the best properties available for you.</p>
+    </div>
+    <div class="sale_container">
+      {% for prop in property %}
+      <div class="box">
+        <div class="img-box">
+          <!-- Dynamically display property image -->
+          <img src="{{ prop.image.url }}" alt="{{ prop.title }}" />
+        </div>
+        <div class="detail-box">
+          <!-- Dynamically display property name -->
+          <h6>{{ prop.title }}</h6>
+          <!-- Dynamically display property description -->
+          <p>{{ prop.description|truncatechars:100 }}</p>
+          <!-- Dynamically display property price -->
+          <p><strong>Price:</strong> ${{ prop.price }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="btn-box">
+      <a href="#">Find More</a>
+    </div>
+  </div>
+</section> {% endcomment %}

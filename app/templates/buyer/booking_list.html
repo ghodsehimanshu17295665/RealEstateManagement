@@ -1,0 +1,84 @@
+{% extends "buyer/buyer_base.html" %}
+{% load static %}
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<article class="card">
+    <header class="card-header text-center">
+        <h2>My Bookings</h2>
+    </header>
+    <div class="card-body">
+        {% if bookings %}
+            <div class="row">
+                {% for booking in bookings %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card property-card">
+                            {% if booking.property.image %}
+                                <img src="{{ booking.property.image.url }}" alt="{{ booking.property.title }}" class="card-img-top property-image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ booking.property.title }}</h5>
+                                <p class="card-text">
+                                    <strong>Price:</strong> ${{ booking.property.price }}<br>
+                                    <strong>Location:</strong> {{ booking.property.location }}<br>
+                                    <strong>Status:</strong> {{ booking.property.get_status_display }}<br>
+                                    <strong>Booking Status:</strong> {{ booking.get_status_display }}<br>
+                                    <strong>Booking Date:</strong> {{ booking.booking_date|date:"M d, Y H:i" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">You have no bookings.</p>
+        {% endif %}
+    </div>
+</article>
+
+<style>
+    .property-card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .property-card:hover {
+        transform: scale(1.05);
+    }
+
+    .property-image {
+        height: 200px;
+        width: 230px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    .btn-yellow {
+        background-color: yellow !important;
+        color: black !important;
+        border-color: yellow !important;
+    }
+
+    .btn-yellow:hover {
+        background-color: gold !important;
+        border-color: gold !important;
+    }
+
+    .row {
+        margin-top: 20px;
+    }
+
+    .card-body p {
+        margin-bottom: 10px;
+    }
+</style>
+
+{% endblock %}

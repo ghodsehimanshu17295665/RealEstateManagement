@@ -1,38 +1,14 @@
-{% extends 'base.html' %}
+{% extends "buyer/buyer_base.html" %}
+
+{% block title %}View Listings{% endblock %}
 
 {% block content %}
-<h1>Welcome to the Buyer Dashboard</h1>
-<p>Here you can view all available products and manage your shopping experience.</p>
-<section class="buyer_dashboard">
-    <div class="container">
-        <div class="heading_container">
-            <h2>Buyer Dashboard</h2>
-        </div>
-        
-        <!-- Buyer-specific content -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="detail-box">
-                    <h5>My Wishlist</h5>
-                    <p>View your saved properties</p>
-                    <a href="">View Wishlist</a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="detail-box">
-                    <h5>Recent Inquiries</h5>
-                    <p>Check the properties you've inquired about</p>
-                    <a href="">View Inquiries</a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="detail-box">
-                    <h5>My Transactions</h5>
-                    <p>View your past purchases</p>
-                    <a href="">View Transactions</a>
-                </div>
-            </div>
-        </div>
+<article class="card">
+    <header class="card-header">
+        My Buyer Items
+    </header>
+    <div class="card-body">
+        <p>Here you can manage your buying items.</p>
     </div>
-</section>
+</article>
 {% endblock %}
