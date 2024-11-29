@@ -14,6 +14,12 @@ from .views import (
     CreatePropertyView,
     UpdatePropertyView,
     DeletePropertyView,
+    AllPropertyView,
+    BuyerProfile,
+    UpdateBuyerProfile,
+    AddBookingView,
+    BookingListView,
+
 )
 
 urlpatterns = [
@@ -51,5 +57,11 @@ urlpatterns = [
          DeletePropertyView.as_view(),
          name="delete_property",
          ),
+    path("all-properties/", AllPropertyView.as_view(), name="all_properties"),
+    path("buyer/profile/", BuyerProfile.as_view(), name="buyer_profile"),
+    path("buyer/profile/update/", UpdateBuyerProfile.as_view(), name="update_buyer_profile"),
+    # path('properties/', AllPropertyView.as_view(), name='all_properties'),
+    path('properties/<uuid:pk>/add-booking/', AddBookingView.as_view(), name='add_booking'),
+    path('my-bookings/', BookingListView.as_view(), name='booking_list'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
