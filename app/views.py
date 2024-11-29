@@ -14,7 +14,7 @@ from .forms import (
     ProfileUpdateForm,
     PropertyForm,
 )
-from .models import User, Profile, Category, Property
+from .models import User, Profile, Category, Property, Booking
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.paginator import Paginator
@@ -244,3 +244,68 @@ class DeletePropertyView(View):
         property_instance.delete()
         messages.success(request, "Property has been deleted successfully.")
         return redirect("property_list")
+
+
+# Buyer related views :-
+# Show all Property in Buyer Dashboard..,
+class AllPropertyView(ListView):
+    model = Property
+    template_name = 'buyer/all_property_list.html'
+    context_object_name = 'properties'
+
+    def get_queryset(self):
+        return Property.objects.all().order_by('-id')
+
+
+# Buyer Profile View :-
+class BuyerProfile(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect("login_page")
+
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        context = {"data": profile}
+        return render(request, "buyer/buyer_profile.html", context)
+
+
+# Buyer Profile Update View :-
+class UpdateBuyerProfile(View):
+    def get(self, request):
+        profile = request.user.profile
+        form = ProfileUpdateForm(instance=profile, user=request.user)
+        return render(request, "buyer/buyer_profile_update.html", {"form": form})
+
+    def post(self, request):
+        profile = request.user.profile
+        form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=profile, user=request.user
+        )
+        if form.is_valid():
+            form.save()
+            return redirect("buyer_profile")
+        return render(
+            request, "buyer/buyer_profile_update.html", {"form": form}
+        )
+
+
+class AddBookingView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        property_obj = get_object_or_404(Property, id=pk)
+
+        # Prevent duplicate bookings
+        existing_booking = Booking.objects.filter(property=property_obj, buyer=request.user).exists()
+        if existing_booking:
+            # Handle duplicate booking case
+            return redirect('booking_list')
+
+        Booking.objects.create(property=property_obj, buyer=request.user)
+        return redirect('booking_list')
+
+
+class BookingListView(LoginRequiredMixin, ListView):
+    model = Booking
+    template_name = "buyer/booking_list.html"
+    context_object_name = "bookings"
+
+    def get_queryset(self):
+        return Booking.objects.filter(buyer=self.request.user).select_related('property')
