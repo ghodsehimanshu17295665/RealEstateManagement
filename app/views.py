@@ -7,6 +7,8 @@ from django.views.generic import (
     TemplateView,
     View,
     CreateView,
+    DetailView,
+    DeleteView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import (
@@ -16,8 +18,9 @@ from .forms import (
 )
 from .models import User, Profile, Category, Property, Booking
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.core.paginator import Paginator
+from django.contrib.auth.views import PasswordChangeView
 
 
 # Home Page -
@@ -246,6 +249,13 @@ class DeletePropertyView(View):
         return redirect("property_list")
 
 
+# change Passwoard for Seller :-
+class ChangePasswoardSellerView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('buyer_dashboard')
+    template_name = "seller/change_password.html"
+
+
 # Buyer related views :-
 # Show all Property in Buyer Dashboard..,
 class AllPropertyView(ListView):
@@ -288,6 +298,7 @@ class UpdateBuyerProfile(View):
         )
 
 
+# Property Add for booking list :-
 class AddBookingView(LoginRequiredMixin, View):
     def post(self, request, pk):
         property_obj = get_object_or_404(Property, id=pk)
@@ -302,6 +313,7 @@ class AddBookingView(LoginRequiredMixin, View):
         return redirect('booking_list')
 
 
+# Book Property list :-
 class BookingListView(LoginRequiredMixin, ListView):
     model = Booking
     template_name = "buyer/booking_list.html"
@@ -309,3 +321,25 @@ class BookingListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Booking.objects.filter(buyer=self.request.user).select_related('property')
+
+
+# Property detail View :-
+class PropertyDetailView(LoginRequiredMixin, DetailView):
+    model = Property
+    template_name = "buyer/property_detail.html"
+    context_object_name = "property"
+
+
+# # Remove Property for Booking List :-
+class RemoveBookingView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        booking = get_object_or_404(Booking, id=pk, buyer=request.user)
+        booking.delete()
+        return redirect("booking_list")
+
+
+# change Passwoard for buyer :-
+class ChangePasswoardBuyerView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('buyer_dashboard')
+    template_name = "buyer/change_password.html"
