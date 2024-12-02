@@ -1,0 +1,55 @@
+{% extends "buyer/buyer_base.html" %}
+{% load static %}
+
+{% block title %}{{ property.title }}{% endblock %}
+
+{% block content %}
+<article class="card">
+    <header class="card-header text-center">
+        <h2>{{ property.title }}</h2>
+    </header>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                {% if property.image %}
+                    <img src="{{ property.image.url }}" alt="{{ property.title }}" class="img-fluid">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <p><strong>Price:</strong> ${{ property.price }}</p>
+                <p><strong>Location:</strong> {{ property.location }}</p>
+                <p><strong>Status:</strong> {{ property.get_status_display }}</p>
+                <p><strong>Description:</strong> {{ property.description }}</p>
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- Back Button -->
+<div class="text-center my-4">
+    <button onclick="history.back()" class="btn btn-primary">Back</button>
+</div>
+
+<style>
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+    .my-4 {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
