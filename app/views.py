@@ -21,6 +21,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.core.paginator import Paginator
 from django.contrib.auth.views import PasswordChangeView
+from .email_utils import send_verification_email
 
 
 # Home Page -
@@ -36,18 +37,24 @@ class SignUpView(View):
     template_name = "registration/signup.html"
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect("/")
+        # form = SignUpForm(request.POST)
         form = SignUpForm()
         return render(request, self.template_name, {"form": form})
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect("/")
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, "Account created successfully! Please log in.")
-            return redirect(reverse_lazy("login_page"))
-        else:
-            messages.error(request, "There was an error with your submission. Please try again.")
-        return render(request, self.template_name, {"form": form})
+            send_verification_email(user, request)
+            messages.success(
+                request, "Account created successfully! You are now logged in."
+            )
+            return redirect("login_page")
+        return render(request, "registration/signup.html", {"form": form})
 
 
 # Login View Function
@@ -59,20 +66,66 @@ class LoginView(View):
         return render(request, "registration/login.html", {"form": form})
 
     def post(self, request):
-        form = AuthenticationForm(data=request.POST)
+        form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
+
             if user:
-                login(request, user)
-                # Redirect based on role
-                if user.role == "SELLER":
-                    return redirect("home_page")
+                # Check if the user's email is verified
+                if not user.email_verified:
+                    # Token handling logic here
+                    if user.is_token_valid():
+                        user.generate_verification_token()
+                        send_verification_email(user, request)
+                        messages.error(
+                            request,
+                            "Your email is not verified. A new verification link has been sent to your email.",
+                        )
+                        return redirect("login")
                 else:
-                    return redirect("home_page")
-        messages.error(request, "Invalid username or password. Please try again.")
+                    login(request, user)
+                    messages.success(request, "Logged in successfully!")
+                    return self.redirect_based_on_role(user)
+            else:
+                messages.error(
+                    request, "Invalid username or password. Please try again."
+                )
         return render(request, "registration/login.html", {"form": form})
+
+    def redirect_based_on_role(self, user):
+        if user.role == "SELLER":
+            return redirect("home_page")
+        return redirect("home_page")
+
+
+# Activate Account View :-
+class ActivateAccountView(View):
+    def get(self, request, uid, token):
+        user = User.objects.filter(id=uid, verification_token=token).first()
+
+        if user and user.is_token_valid():
+            user.email_verified = True
+            user.verification_token = None
+            user.token_created_at = None
+            user.save()
+            messages.success(
+                request,
+                "Thank you for verifying your email. You can now log in.",
+            )
+            return redirect("login_page")
+        elif user:
+            user.generate_verification_token()
+            send_verification_email(user, request)
+            messages.error(
+                request,
+                "Your email verification link has expired. A new verification link has been sent to your email.",
+            )
+            return redirect("login_page")
+        else:
+            messages.error(request, "Invalid verification link.")
+            return redirect("login_page")
 
 
 # Logout
@@ -172,7 +225,9 @@ class PropertyList_View(TemplateView):
 
         # Set up pagination (2 items per page)
         paginator = Paginator(properties, 2)  # Show 2 properties per page
-        page_number = request.GET.get('page', 1)  # Get the page number from query parameters
+        page_number = request.GET.get(
+            "page", 1
+        )  # Get the page number from query parameters
         page_obj = paginator.get_page(page_number)  # Get the specific page
 
         # Pass the page_obj to the template
@@ -252,7 +307,7 @@ class DeletePropertyView(View):
 # change Passwoard for Seller :-
 class ChangePasswoardSellerView(PasswordChangeView):
     form_class = PasswordChangeForm
-    success_url = reverse_lazy('buyer_dashboard')
+    success_url = reverse_lazy("buyer_dashboard")
     template_name = "seller/change_password.html"
 
 
@@ -260,11 +315,11 @@ class ChangePasswoardSellerView(PasswordChangeView):
 # Show all Property in Buyer Dashboard..,
 class AllPropertyView(ListView):
     model = Property
-    template_name = 'buyer/all_property_list.html'
-    context_object_name = 'properties'
+    template_name = "buyer/all_property_list.html"
+    context_object_name = "properties"
 
     def get_queryset(self):
-        return Property.objects.all().order_by('-id')
+        return Property.objects.all().order_by("-id")
 
 
 # Buyer Profile View :-
@@ -283,7 +338,9 @@ class UpdateBuyerProfile(View):
     def get(self, request):
         profile = request.user.profile
         form = ProfileUpdateForm(instance=profile, user=request.user)
-        return render(request, "buyer/buyer_profile_update.html", {"form": form})
+        return render(
+            request, "buyer/buyer_profile_update.html", {"form": form}
+        )
 
     def post(self, request):
         profile = request.user.profile
@@ -304,13 +361,15 @@ class AddBookingView(LoginRequiredMixin, View):
         property_obj = get_object_or_404(Property, id=pk)
 
         # Prevent duplicate bookings
-        existing_booking = Booking.objects.filter(property=property_obj, buyer=request.user).exists()
+        existing_booking = Booking.objects.filter(
+            property=property_obj, buyer=request.user
+        ).exists()
         if existing_booking:
             # Handle duplicate booking case
-            return redirect('booking_list')
+            return redirect("booking_list")
 
         Booking.objects.create(property=property_obj, buyer=request.user)
-        return redirect('booking_list')
+        return redirect("booking_list")
 
 
 # Book Property list :-
@@ -320,7 +379,9 @@ class BookingListView(LoginRequiredMixin, ListView):
     context_object_name = "bookings"
 
     def get_queryset(self):
-        return Booking.objects.filter(buyer=self.request.user).select_related('property')
+        return Booking.objects.filter(buyer=self.request.user).select_related(
+            "property"
+        )
 
 
 # Property detail View :-
@@ -341,5 +402,5 @@ class RemoveBookingView(LoginRequiredMixin, View):
 # change Passwoard for buyer :-
 class ChangePasswoardBuyerView(PasswordChangeView):
     form_class = PasswordChangeForm
-    success_url = reverse_lazy('buyer_dashboard')
+    success_url = reverse_lazy("buyer_dashboard")
     template_name = "buyer/change_password.html"
