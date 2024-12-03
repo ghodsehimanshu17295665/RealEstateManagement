@@ -9,7 +9,6 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = [
-            "username",
             "first_name",
             "last_name",
             "email",
@@ -18,12 +17,6 @@ class SignUpForm(UserCreationForm):
             "password2",
         ]
         widgets = {
-            "username": forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "Enter your username",
-                }
-            ),
             "first_name": forms.TextInput(
                 attrs={
                     "class": "form-control",
@@ -55,6 +48,14 @@ class SignUpForm(UserCreationForm):
                 }
             ),
         }
+
+    def save(self, commit=True):
+        # Save the provided password in hashed format
+        user = super().save(commit=False)
+        user.username = None  # Explicitly set username to None or ignore
+        if commit:
+            user.save()
+        return user
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -95,6 +96,9 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ["birth_date", "gender"]
+        widgets = {
+            "birth_date": forms.DateInput(attrs={"type": "date"}),
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
