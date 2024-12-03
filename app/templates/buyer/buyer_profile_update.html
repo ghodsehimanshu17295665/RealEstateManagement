@@ -59,11 +59,23 @@
 
         <!-- Buttons -->
         <div class="btn-container">
-            <button type="submit" class="btn btn-success">Profile Update</button>
+            <button type="submit" class="btn btn-success">Update Profile</button>
             <a href="{% url 'buyer_profile' %}" class="btn btn-secondary">Back to Profile</a>
         </div>
     </form>
 </div>
+
+<!-- Add Flatpickr Calendar -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        flatpickr("#id_birth_date", {
+            dateFormat: "Y-m-d", // Customize the format if necessary
+            maxDate: "today",   // Prevent future dates
+            allowInput: true    // Allow manual input if needed
+        });
+    });
+</script>
 
 <!-- Page-specific styles -->
 <style>
