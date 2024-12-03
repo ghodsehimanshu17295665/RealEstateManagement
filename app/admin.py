@@ -2,7 +2,15 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from .forms import CustomUserChangeForm, CustomUserCreationForm
 
-from .models import User, Category, Property, Booking, Transaction, Payment, Profile
+from .models import (
+    User,
+    Category,
+    Property,
+    Booking,
+    Transaction,
+    Payment,
+    Profile,
+)
 
 
 @admin.register(User)
@@ -12,7 +20,6 @@ class CustomUserAdmin(DefaultUserAdmin):
     model = User
     list_display = (
         "id",
-        "username",
         "email",
         "role",
         "phone_number",
@@ -20,15 +27,22 @@ class CustomUserAdmin(DefaultUserAdmin):
         "is_staff",
         "is_superuser",
         "is_active",
+        "email_verified",
         "created_at",
         "updated_at",
     )
-    list_filter = ("role", "is_staff", "is_superuser", "is_active", "created_at")
-    search_fields = ("username", "email", "phone_number", "role")
+    list_filter = (
+        "role",
+        "is_staff",
+        "is_superuser",
+        "is_active",
+        "created_at",
+    )
+    search_fields = ("email", "phone_number", "role")
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("username", "email", "password")}),
+        (None, {"fields": ("email", "password")}),
         (
             "Personal info",
             {
@@ -38,9 +52,9 @@ class CustomUserAdmin(DefaultUserAdmin):
                     "role",
                     "phone_number",
                     "address",
-                    # "email_verified",
-                    # "verification_token",
-                    # "token_created_at",
+                    "email_verified",
+                    "verification_token",
+                    "token_created_at",
                 )
             },
         ),
@@ -56,7 +70,17 @@ class CustomUserAdmin(DefaultUserAdmin):
                 )
             },
         ),
-        ("Important dates", {"fields": ("last_login", "date_joined", "created_at", "updated_at")}),
+        (
+            "Important dates",
+            {
+                "fields": (
+                    "last_login",
+                    "date_joined",
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
     add_fieldsets = (
         (
@@ -64,7 +88,6 @@ class CustomUserAdmin(DefaultUserAdmin):
             {
                 "classes": ("wide",),
                 "fields": (
-                    "username",
                     "email",
                     "password1",
                     "password2",
@@ -83,7 +106,7 @@ class CustomUserAdmin(DefaultUserAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "birth_date", "gender")
-    search_fields = ('user__username', 'user__email')
+    search_fields = ("user__username", "user__email")
 
 
 @admin.register(Category)
@@ -93,19 +116,34 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'price', 'status', 'location', 'seller', 'category', 'image')
+    list_display = (
+        "id",
+        "title",
+        "price",
+        "status",
+        "location",
+        "seller",
+        "category",
+        "image",
+    )
 
 
 @admin.register(Booking)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'property', 'buyer', 'booking_date', 'status')
+    list_display = ("id", "property", "buyer", "booking_date", "status")
 
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'property', 'buyer', 'transaction_type', 'amount')
+    list_display = ("id", "property", "buyer", "transaction_type", "amount")
 
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'transaction', 'amount_paid', 'payment_method', 'status')
+    list_display = (
+        "id",
+        "transaction",
+        "amount_paid",
+        "payment_method",
+        "status",
+    )
