@@ -24,6 +24,10 @@ from .views import (
     ChangePasswoardSellerView,
     ChangePasswoardBuyerView,
     ActivateAccountView,
+    CustomPasswordResetView,
+    CustomPasswordResetDoneView,
+    CustomPasswordResetConfirmView,
+    CustomPasswordResetCompleteView,
 )
 
 urlpatterns = [
@@ -100,5 +104,22 @@ urlpatterns = [
         "change-password/",
         ChangePasswoardSellerView.as_view(),
         name="change_password_seller",
+    ),
+    # Forget Password :-
+    path('password-reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path(
+        "password_reset/done/",
+        CustomPasswordResetDoneView.as_view(),
+        name="password_reset_done",
+    ),
+    path(
+        "reset/<uidb64>/<token>/",
+        CustomPasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path(
+        "reset/done/",
+        CustomPasswordResetCompleteView.as_view(),
+        name="password_reset_complete",
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

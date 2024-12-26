@@ -21,7 +21,12 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.core.paginator import Paginator
 from django.contrib.auth.views import PasswordChangeView
-from .email_utils import send_verification_email
+from .email_utils import send_verification_email, send_custom_mail
+from django.contrib.auth.views import PasswordResetView
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+# from .utils import send_custom_mail
 
 
 # Home Page -
@@ -404,3 +409,30 @@ class ChangePasswoardBuyerView(PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy("buyer_dashboard")
     template_name = "buyer/change_password.html"
+
+
+# Forget Passwoard Related Views :-
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    template_name = "user/password_reset_form.html"
+    email_template_name = "user/password_reset_email.html"
+    html_email_template_name = "user/password_reset_email.html"
+    success_url = reverse_lazy("password_reset_done")
+
+    def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email):
+        """
+        Override the default password reset email sending method to use custom email rendering.
+        """
+        send_custom_mail(subject_template_name, email_template_name, context, from_email, to_email, self.html_email_template_name)
+
+
+class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = "user/password_reset_done.html"
+
+
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = "user/password_reset_confirm.html"
+    success_url = reverse_lazy("password_reset_complete")
+
+
+class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = "user/password_reset_complete.html"
