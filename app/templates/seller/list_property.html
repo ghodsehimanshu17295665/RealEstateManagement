@@ -1,0 +1,56 @@
+{% extends "seller/seller_base.html" %}
+
+{% block title %}My Properties{% endblock %}
+
+{% block content %}
+<article class="card">
+    <header class="card-header">
+        My Properties
+    </header>
+    <div class="card-body">
+        {% if page_obj.object_list %}
+            <ul class="list-group">
+                {% for property in page_obj.object_list %}
+                    <li class="list-group-item">
+                        <h5>{{ property.title }}</h5>
+                        <p><strong>Price:</strong> ${{ property.price }}</p>
+                        <p><strong>Location:</strong> {{ property.location }}</p>
+                        <p><strong>Status:</strong> {{ property.get_status_display }}</p>
+                        <p>{{ property.description }}</p>
+                        {% if property.image %}
+                            <img src="{{ property.image.url }}" alt="{{ property.title }}" class="property-image">
+                        {% endif %}
+                        <br>
+                        <a href="{% url 'update_property' property.pk %}" class="btn btn-primary mt-2">Edit Property</a>
+                        <a href="{% url 'delete_property' property.pk %}" class="btn btn-danger mt-2">Remove Property</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- Pagination controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <p>No properties found.</p>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}

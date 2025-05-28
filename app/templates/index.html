@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Real Estate Management</title>
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Raleway:400,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="hero_area">
+      <!-- header section starts -->
+      {% block header %}
+        {% include 'header.html' %}
+      {% endblock %}
+      <!-- end header section -->
+
+      <!-- slider section -->
+      <section class="slider_section">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-4 offset-md-1">
+              <div class="detail-box">
+                <h1>
+                  <span>Modern</span> <br />
+                  Apartment <br />
+                  House
+                </h1>
+                <p>It is a long established fact that a reader will be distracted by the readable content of</p>
+                <div class="btn-box">
+                  <a href="" class="">Read More</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- end slider section -->
+    </div>
+
+    <!-- about section -->
+    {% block about %}
+      {% include 'about.html' %}
+    {% endblock %}
+    <!-- end about section -->
+
+    <!-- sale section -->
+    {% block house %}
+      {% include 'house.html' %}
+    {% endblock %}
+    <!-- end sale section -->
+
+    <!-- deal section -->
+    <!-- us section -->
+    {% block deal_us_section %}
+      {% include 'deal_us_section.html' %}
+    {% endblock %}
+    <!-- end deal section -->
+    <!-- end us section -->
+
+    <!-- info section -->
+    {% block info_section %}
+      {% include 'info_section.html' %}
+    {% endblock %}
+    <!-- end info_section -->
+
+    <!-- footer section -->
+    <section class="container-fluid footer_section"></section>
+    <!-- end footer section -->
+
+    <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+  </body>
+</html>

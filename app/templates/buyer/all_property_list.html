@@ -1,0 +1,83 @@
+{% extends "buyer/buyer_base.html" %}
+{% load static %}
+{% block title %}All Properties{% endblock %}
+
+{% block content %}
+<article class="card">
+    <header class="card-header text-center">
+        <h2>All Properties</h2>
+    </header>
+    <div class="card-body">
+        {% if properties %}
+            <div class="row">
+                {% for property in properties %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card property-card">
+                            {% if property.image %}
+                                <img src="{{ property.image.url }}" alt="{{ property.title }}" class="card-img-top property-image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ property.title }}</h5>
+                                <p class="card-text">
+                                    <strong>Price:</strong> ${{ property.price }}<br>
+                                    <strong>Location:</strong> {{ property.location }}<br>
+                                    <strong>Status:</strong> {{ property.get_status_display }}
+                                </p>
+                                <p class="card-text">{{ property.description|truncatechars:100 }}</p>
+
+                                <!-- Add Property for Buying Button -->
+                                <form action="{% url 'add_booking' property.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-yellow btn-block mt-2">
+                                        Add Property for Buying
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">No properties found.</p>
+        {% endif %}
+    </div>
+</article>
+
+<style>
+    .property-card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .property-card:hover {
+        transform: scale(1.05);
+    }
+
+    .property-image {
+        height: 200px;
+        width: 230px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+    .btn-yellow {
+        background-color: yellow !important;
+        color: black !important;
+        border-color: yellow !important;
+    }
+    
+    .btn-yellow:hover {
+        background-color: gold !important;
+        border-color: gold !important;
+    }
+</style>
+
+{% endblock %}

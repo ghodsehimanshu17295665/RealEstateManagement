@@ -1,0 +1,56 @@
+{% extends "seller/seller_base.html" %}
+
+{% block title %}Create Property{% endblock %}
+
+{% block content %}
+<article class="card mx-auto" style="max-width: 600px; margin-top: 20px;">
+    <header class="card-header bg-primary text-white text-center">
+        <h5>Create a New Property</h5>
+    </header>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            <div class="form-group mb-3">
+                <label for="title" class="form-label">Title:</label>
+                {{ form.title }}
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="price" class="form-label">Price:</label>
+                {{ form.price }}
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="location" class="form-label">Location:</label>
+                {{ form.location }}
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="status" class="form-label">Status:</label>
+                {{ form.status }}
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="category" class="form-label">Category:</label>
+                {{ form.category }}
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="description" class="form-label">Description:</label>
+                {{ form.description }}
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="image" class="form-label">Image:</label>
+                {{ form.image }}
+            </div>
+            
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Create Property</button>
+            </div>
+        </form>
+    </div>
+</article>
+{% endblock %}

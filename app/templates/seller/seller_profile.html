@@ -1,0 +1,73 @@
+{% extends "seller/seller_base.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-container mx-auto">
+        {% if data %}
+            <img src="{{ data.user.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+            <h3>{{ data.user.username }}</h3>
+            <p><strong>First Name:</strong> {{ data.user.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ data.user.last_name }}</p>
+            <p><strong>Birth Date:</strong> {{ data.birth_date }}</p>
+            <p><strong>Gender:</strong> {{ data.get_gender_display }}</p>
+            <p><strong>Phone Number:</strong> {{ data.user.phone_number }}</p>
+            <p><strong>Address:</strong> {{ data.user.address }}</p>
+        {% else %}
+            <p>No profile data found.</p>
+        {% endif %}
+
+        <div class="btn-container">
+            <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Profile</a>
+            {% comment %} <a href="{% url 'home_page' %}" class="btn btn-secondary">Back to Profile</a> {% endcomment %}
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .profile-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        color: black;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-container img {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 2px solid #1e90ff;
+    }
+
+    .profile-container h3 {
+        margin: 10px 0;
+        font-size: 24px;
+        color: #000000;
+    }
+
+    .profile-container p {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #222222;
+    }
+
+    .btn-container .btn {
+        margin: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-container .btn:hover {
+        background-color: #f39c12;
+        color: white;
+    }
+</style>
+{% endblock %}
